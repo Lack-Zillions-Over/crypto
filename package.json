@@ -1,0 +1,107 @@
+{
+  "name": "lzo-crypto",
+  "version": "1.1.1",
+  "description": "Data Encryption and Decryption.",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "engines": {
+    "yarn": ">=1.22.19",
+    "npm": ">=8.19.2 <=9.0.0",
+    "node": ">=18.12.1 <=19.0.0"
+  },
+  "repository": "git://github.com/Lack-Zillions-Over/crypto.git",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.2.6",
+    "@types/node": "~18.11.18",
+    "@types/randomstring": "^1.1.8",
+    "@typescript-eslint/eslint-plugin": "~5.48.0",
+    "@typescript-eslint/parser": "~5.48.0",
+    "cz-conventional-changelog": "3.3.0",
+    "dotenv": "^16.0.3",
+    "dotenv-cli": "^6.0.0",
+    "eslint": "~8.31.0",
+    "eslint-config-prettier": "~8.6.0",
+    "eslint-plugin-jest": "^27.2.1",
+    "jest": "^29.3.1",
+    "lint-staged": "^13.1.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "~2.8.2",
+    "rimraf": "~3.0",
+    "standard-version": "^9.5.0",
+    "ts-jest": "^29.0.5",
+    "ts-node-dev": "^2.0.0",
+    "tsup": "^6.5.0",
+    "tsx": "^3.12.2",
+    "typescript": "~4.9.4"
+  },
+  "scripts": {
+    "commit": "cz",
+    "push:release": "git push --follow-tags origin main",
+    "post:release": "standard-version && yarn push:release",
+    "post:prerelease": "standard-version --prerelease alpha && yarn push:release",
+    "audit-fix": "npx yarn-audit-fix",
+    "update": "npx yarn upgrade-interactive --latest",
+    "clean": "rimraf coverage build tmp",
+    "prebuild": "npx yarn lint && npx yarn type-check",
+    "build": "tsup src/index.ts --config tsup.config.js",
+    "build:watch": "tsup src/index.ts --watch --config tsup.config.js",
+    "build:release": "npm run clean && tsup src/index.ts --config tsup.config.release.js",
+    "start": "tsx watch src/index.ts",
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check -- --watch",
+    "format": "prettier --write .",
+    "lint": "eslint . --ext .ts",
+    "test": "jest --watchAll --detectOpenHandles",
+    "test:ci": "jest --ci --detectOpenHandles"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.ts": "tsc-files --noEmit",
+    "src/**/*": [
+      "yarn lint",
+      "yarn format"
+    ]
+  },
+  "keywords": [
+    "lzo",
+    "crypto",
+    "node",
+    "ts",
+    "typescript",
+    "encryption",
+    "decryption"
+  ],
+  "files": [
+    "build/*.js",
+    "build/**/*.js",
+    "build/*.d.ts",
+    "build/**/*.d.ts"
+  ],
+  "author": "GuilhermeSantos001 <luizgp120@hotmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Lack-Zillions-Over/crypto/issues"
+  },
+  "homepage": "https://github.com/Lack-Zillions-Over/crypto#readme",
+  "dependencies": {
+    "ioredis": "^5.2.5",
+    "lzutf8": "^0.6.3",
+    "randomstring": "^1.2.3"
+  },
+  "volta": {
+    "node": "18.12.1",
+    "yarn": "1.22.19"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
