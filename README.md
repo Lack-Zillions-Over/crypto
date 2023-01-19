@@ -15,6 +15,18 @@
 npm install lzo-crypto OR yarn add lzo-crypto
 ```
 
+## Configuration
+
+Please input the credentials of your Redis server in the `.env` file.
+
+> See the example in the `.env.example` file.
+
+```bash
+REDIS_URL="redis://IP:PORT"
+REDIS_PORT=6379
+REDIS_PASSWORD="PASSWORD"
+```
+
 ## Usage
 
 ```typescript
