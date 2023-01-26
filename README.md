@@ -44,6 +44,10 @@ console.log(decrypted); // I have always feed my dog the dog food that comes in 
 
 ## API
 
+`Crypto.setStrategy(strategy: Strategy): void`
+
+> Define the strategy to use for storage and retrieval of the IV and tag
+
 `Crypto.encrypt(txt: string, password?: string): Promise<string>`
 
 > It encrypts a string using a password and saves the encrypted string, the initialization vector, and the authentication tag to the database
