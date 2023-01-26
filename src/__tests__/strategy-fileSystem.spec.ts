@@ -1,33 +1,6 @@
 import { Crypto } from '../index';
 import { texts } from './mocks';
 
-jest.mock('ioredis', () => {
-  const mockData: Record<string, string | Buffer> = {};
-
-  return jest.fn().mockImplementation(() => {
-    return {
-      set: jest.fn((key: string, value: string) => {
-        mockData[key] = value;
-        return true;
-      }),
-      get: jest.fn((key: string) => {
-        return mockData[key];
-      }),
-      setBuffer: jest.fn((key: string, value: Buffer) => {
-        mockData[key] = value;
-        return true;
-      }),
-      getBuffer: jest.fn((key: string) => {
-        return mockData[key];
-      }),
-      del: jest.fn((key: string) => {
-        delete mockData[key];
-        return true;
-      }),
-    };
-  });
-});
-
 jest.mock('fs', () => {
   const mockDirs = [];
   const mockData: Record<string, string | Buffer> = {};
