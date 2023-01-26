@@ -24,9 +24,15 @@ class Crypto {
   private _fileSystem: FileSystemRepository;
 
   constructor() {
-    this._strategy = 'REDIS';
-    this._redis = new RedisRepository();
-    this._fileSystem = new FileSystemRepository();
+    this._strategy = 'FILE_SYSTEM';
+  }
+
+  private _setStrategyRedis() {
+    if (!this._redis) this._redis = new RedisRepository();
+  }
+
+  private _setStrategyFileSystem() {
+    if (!this._fileSystem) this._fileSystem = new FileSystemRepository();
   }
 
   /**
@@ -112,6 +118,8 @@ class Crypto {
    * context.
    */
   public setStrategy(strategy: Strategy) {
+    if (strategy === 'REDIS') this._setStrategyRedis();
+    else if (strategy === 'FILE_SYSTEM') this._setStrategyFileSystem();
     this._strategy = strategy;
   }
 
