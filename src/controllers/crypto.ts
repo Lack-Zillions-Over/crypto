@@ -11,8 +11,16 @@ type Config = {
 };
 
 class Crypto {
+  /* It's declaring a private property called _strategy and setting its type to
+  Strategy. */
   private _strategy: Strategy;
+
+  /* It's declaring a private property called _redis and setting its type to
+  RedisRepository. */
   private _redis: RedisRepository;
+
+  /* It's declaring a private property called _fileSystem and setting its type to
+  FileSystemRepository. */
   private _fileSystem: FileSystemRepository;
 
   constructor() {
