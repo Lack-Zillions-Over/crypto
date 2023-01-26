@@ -1,4 +1,7 @@
 node_modules
 .github
 .idea
+setup
 build
+data
+coverage
