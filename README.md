@@ -15,6 +15,10 @@
 npm install lzo-crypto OR yarn add lzo-crypto
 ```
 
+## Attention
+
+> The default strategy is `File System`, if you want to use `Redis` you must call method `Crypto.setStrategy('REDIS')`.
+
 ## Configuration
 
 Please input the credentials of your Redis server in the `.env` file.
