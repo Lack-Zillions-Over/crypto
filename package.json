@@ -1,6 +1,6 @@
 {
   "name": "lzo-crypto",
-  "version": "1.1.5",
+  "version": "1.2.0",
   "description": "Data Encryption and Decryption.",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
