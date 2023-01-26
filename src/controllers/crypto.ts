@@ -1,8 +1,9 @@
 import CRYPTO from 'crypto';
-import LZUTF8 from 'lzutf8';
-import Redis from 'ioredis';
-import RANDOMSTRING from 'randomstring';
+import Utils from '../shared/utils';
+import RedisRepository from '../repositories/redis';
+import FileSystemRepository from '../repositories/fileSystem';
 
+type Strategy = 'REDIS' | 'FILE_SYSTEM';
 type Config = {
   algorithm: CRYPTO.CipherGCMTypes;
   password: string;
@@ -10,70 +11,14 @@ type Config = {
 };
 
 class Crypto {
-  private _client: Redis;
+  private _strategy: Strategy;
+  private _redis: RedisRepository;
+  private _fileSystem: FileSystemRepository;
 
   constructor() {
-    this._client = new Redis(process.env.REDIS_URL, {
-      password: process.env.REDIS_PASSWORD,
-    });
-  }
-
-  /**
-   * It takes a string, creates a hash of it, and returns the first 32 characters of
-   * the hash
-   * @param {string} data - The data to be hashed.
-   * @returns A hash of the data.
-   */
-  private _createHash(data: string) {
-    return CRYPTO.createHash('sha256')
-      .update(data)
-      .digest('base64')
-      .slice(0, 32);
-  }
-
-  /**
-   * It creates a hash of a random string
-   * @returns A hash of a random string.
-   */
-  private _getHash() {
-    const hash = CRYPTO.createHash('md5');
-
-    hash.update(RANDOMSTRING.generate(24));
-
-    return hash.digest('hex');
-  }
-
-  /**
-   * It takes a string, hashes it, and returns the hash
-   * @param {string} text - The text to be hashed.
-   * @returns A hash of the text.
-   */
-  private _serialize(text: string) {
-    return CRYPTO.createHash('sha256').update(text).digest('hex');
-  }
-
-  /**
-   * It takes a value of type T, converts it to a string, compresses it, and returns
-   * the compressed string
-   * @param {T} value - The value to be compressed.
-   * @returns A string
-   */
-  private _compress<T>(value: T): string {
-    return LZUTF8.compress(JSON.stringify(value), { outputEncoding: 'Base64' });
-  }
-
-  /**
-   * It takes a string, decompresses it, and returns the result as a generic type
-   * @param {string} value - The string to be compressed.
-   * @returns The decompressed value.
-   */
-  private _decompress<T>(value: string): T {
-    return JSON.parse(
-      LZUTF8.decompress(value, {
-        inputEncoding: 'Base64',
-        outputEncoding: 'String',
-      }),
-    );
+    this._strategy = 'REDIS';
+    this._redis = new RedisRepository();
+    this._fileSystem = new FileSystemRepository();
   }
 
   /**
@@ -83,7 +28,12 @@ class Crypto {
    * @returns A promise that resolves to the value of the key.
    */
   private async _save(key: string, value: string) {
-    return await this._client.set(this._serialize(key), this._compress(value));
+    switch (this._strategy) {
+      case 'REDIS':
+        return await this._redis.set(key, value);
+      case 'FILE_SYSTEM':
+        return await this._fileSystem.set(key, value);
+    }
   }
 
   /**
@@ -93,7 +43,12 @@ class Crypto {
    * @returns A promise that resolves to a boolean value.
    */
   private async _saveBuffer(key: string, value: Buffer) {
-    return await this._client.setBuffer(this._serialize(key), value, 'GET');
+    switch (this._strategy) {
+      case 'REDIS':
+        return await this._redis.setBuffer(key, value);
+      case 'FILE_SYSTEM':
+        return await this._fileSystem.setBuffer(key, value);
+    }
   }
 
   /**
@@ -102,7 +57,12 @@ class Crypto {
    * @returns The value of the key in the cache.
    */
   private async _load(key: string): Promise<string> {
-    return this._decompress(await this._client.get(this._serialize(key)));
+    switch (this._strategy) {
+      case 'REDIS':
+        return await this._redis.get(key);
+      case 'FILE_SYSTEM':
+        return await this._fileSystem.get(key);
+    }
   }
 
   /**
@@ -111,7 +71,12 @@ class Crypto {
    * @returns A promise that resolves to a buffer.
    */
   private async _loadBuffer(key: string): Promise<Buffer> {
-    return await this._client.getBuffer(this._serialize(key));
+    switch (this._strategy) {
+      case 'REDIS':
+        return await this._redis.getBuffer(key);
+      case 'FILE_SYSTEM':
+        return await this._fileSystem.getBuffer(key);
+    }
   }
 
   /**
@@ -121,7 +86,25 @@ class Crypto {
    * @returns The number of keys that were removed.
    */
   private async _delete(...key: string[]) {
-    return await this._client.del(...key.map((k) => this._serialize(k)));
+    switch (this._strategy) {
+      case 'REDIS':
+        return await this._redis.del(...key);
+      case 'FILE_SYSTEM':
+        return await this._fileSystem.del(...key);
+    }
+  }
+
+  /**
+   * "The setStrategy function takes a Strategy object as an argument and assigns it
+   * to the _strategy property."
+   *
+   * The setStrategy function is a setter function. It's a function that sets the
+   * value of a property
+   * @param {Strategy} strategy - Strategy - The strategy to use for the current
+   * context.
+   */
+  public setStrategy(strategy: Strategy) {
+    this._strategy = strategy;
   }
 
   /**
@@ -143,10 +126,10 @@ class Crypto {
         password,
         authTagLength: 16,
       },
-      iv = this._createHash(this._getHash()),
+      iv = Utils.createHash(Utils.getHash()),
       cipher = CRYPTO.createCipheriv(
         config.algorithm,
-        this._createHash(password || config.password),
+        Utils.createHash(password || config.password),
         iv,
         { authTagLength: config.authTagLength },
       );
@@ -193,7 +176,7 @@ class Crypto {
         },
         decipher = CRYPTO.createDecipheriv(
           config.algorithm,
-          this._createHash(password || config.password),
+          Utils.createHash(password || config.password),
           iv,
           { authTagLength: config.authTagLength },
         );
