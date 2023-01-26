@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.3](https://github.com/Lack-Zillions-Over/crypto/compare/v1.2.2...v1.2.3) (2023-01-26)
+
+
+### Docs
+
+* **readme:** new written important alert! ([2d4104a](https://github.com/Lack-Zillions-Over/crypto/commit/2d4104a8ec1b1655df88a4e863967d1af6fbb1e2))
+
 ### [1.2.2](https://github.com/Lack-Zillions-Over/crypto/compare/v1.2.1...v1.2.2) (2023-01-26)
 
 
