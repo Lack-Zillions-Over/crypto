@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.2](https://github.com/Lack-Zillions-Over/crypto/compare/v1.2.1...v1.2.2) (2023-01-26)
+
+
+### Bug Fixes
+
+* **strategy:** fixed compatibility for storage strategies ([e0bee49](https://github.com/Lack-Zillions-Over/crypto/commit/e0bee4984a4d6a9c8179fa92bad0473540ef46ed))
+
+
+### Tests
+
+* **suite tests:** remove mock for ioredis ([139658d](https://github.com/Lack-Zillions-Over/crypto/commit/139658d8a3c49a2cb3ec14e8996a4f23c2b8064a))
+
 ### [1.2.1](https://github.com/Lack-Zillions-Over/crypto/compare/v1.2.0...v1.2.1) (2023-01-26)
 
 
