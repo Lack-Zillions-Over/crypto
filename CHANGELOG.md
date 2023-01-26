@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/Lack-Zillions-Over/crypto/compare/v1.2.0...v1.2.1) (2023-01-26)
+
+
+### Tests
+
+* **suite tests:** fixed test for strategy: File System ([abf9f22](https://github.com/Lack-Zillions-Over/crypto/commit/abf9f22f35a90da15f11c406c85bbc5b90232918))
+
+
+### Docs
+
+* **documentation:** added description for methods ([974de06](https://github.com/Lack-Zillions-Over/crypto/commit/974de062085c4a43c71abbfaedfb6d92849068e6))
+* **readme:** describe new method 'setStrategy' ([26697be](https://github.com/Lack-Zillions-Over/crypto/commit/26697be8ee2b850d5da898875d366233a33f3006))
+
 ## [1.2.0](https://github.com/Lack-Zillions-Over/crypto/compare/v1.1.5...v1.2.0) (2023-01-26)
 
 
